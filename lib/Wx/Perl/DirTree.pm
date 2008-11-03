@@ -8,7 +8,7 @@ use Wx qw(wxOK wxID_ABOUT wxID_EXIT wxICON_INFORMATION wxTOP wxVERTICAL wxNO_FUL
 use Wx::Event qw(EVT_MENU EVT_CLOSE EVT_SIZE EVT_UPDATE_UI EVT_KEY_DOWN);
 use Wx::Perl::VirtualTreeCtrl qw(EVT_POPULATE_TREE_ITEM);
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 
 sub new {

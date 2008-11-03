@@ -1,15 +1,26 @@
---- #YAML:1.0
-name:                Wx-Perl-DirTree
-version:             0.01
-abstract:            A directory tree widget for wxPerl
-license:             perl
-generated_by:        ExtUtils::MakeMaker version 6.36
-distribution_type:   module
-requires:     
-    Test::More:                    0
-    Wx::Perl::VirtualTreeCtrl:     1.017
-meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
+---
+abstract: 'A directory tree widget for wxPerl'
 author:
-    - Renee Baecker <module@renee-baecker.de>
+  - 'Renee Baecker <module@renee-baecker.de>'
+build_requires:
+  Wx::Perl::VirtualTreeCtrl 1.17
+generated_by: 'h2xs version 1.23'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
+name: Wx-Perl-DirTree
+provides:
+  Wx::Perl::DirTree:
+    file: /lib/Wx/Perl/DirTree.pm
+    version: 0.01
+  Wx::Perl::DirTree::Linux:
+    file: /lib/Wx/Perl/DirTree/Linux.pm
+    version: 0.01
+  Wx::Perl::DirTree::Win32:
+    file: /lib/Wx/Perl/DirTree/Win32.pm
+    version: 0.01
+resources:
+  license: http://dev.perl.org/licenses
+version: 0.01
+

@@ -4,6 +4,10 @@ META.yml
 Makefile.PL
 README
 
+example/dirtree.pl
+example/DirTreeTest.pm
+example/MyApp.pm
+
 lib/Wx/Perl/DirTree.pm
 lib/Wx/Perl/DirTree/Linux.pm
 lib/Wx/Perl/DirTree/Win32.pm

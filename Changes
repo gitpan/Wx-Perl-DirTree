@@ -1,5 +1,8 @@
 Revision history for Wx::Perl::DirTree
 
+0.02    03 Nov 2008
+        + added example
+
 0.01    21 Oct 2008
         First version, released on an unsuspecting world.
 
