@@ -45,4 +45,4 @@ sub module_boilerplate_ok {
     );
 }
 
-module_boilerplate_ok('lib\Wx\Perl\DirTree.pm');
+module_boilerplate_ok('lib/Wx/Perl/DirTree.pm');

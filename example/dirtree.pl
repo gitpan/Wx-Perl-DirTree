@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use MyApp;
+use DirTreeTestApp;
 
-my $app = MyApp->new;
+my $app = DirTreeTestApp->new;
 $app->MainLoop;

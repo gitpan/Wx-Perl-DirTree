@@ -6,7 +6,7 @@ README
 
 example/dirtree.pl
 example/DirTreeTest.pm
-example/MyApp.pm
+example/DirTreeTestApp.pm
 
 lib/Wx/Perl/DirTree.pm
 lib/Wx/Perl/DirTree/Linux.pm

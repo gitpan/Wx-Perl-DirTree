@@ -13,7 +13,7 @@ name: Wx-Perl-DirTree
 provides:
   Wx::Perl::DirTree:
     file: /lib/Wx/Perl/DirTree.pm
-    version: 0.01
+    version: 0.03
   Wx::Perl::DirTree::Linux:
     file: /lib/Wx/Perl/DirTree/Linux.pm
     version: 0.01
@@ -22,5 +22,5 @@ provides:
     version: 0.01
 resources:
   license: http://dev.perl.org/licenses
-version: 0.01
+version: 0.03
 

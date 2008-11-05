@@ -8,7 +8,7 @@ use Wx qw(wxOK wxID_ABOUT wxID_EXIT wxICON_INFORMATION wxTOP wxVERTICAL wxNO_FUL
 use Wx::Event qw(EVT_MENU EVT_CLOSE EVT_SIZE EVT_UPDATE_UI EVT_KEY_DOWN);
 use Wx::Perl::VirtualTreeCtrl qw(EVT_POPULATE_TREE_ITEM);
 
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 
 
 sub new {
@@ -17,12 +17,12 @@ sub new {
     my $self = bless {}, $class;
     
     _load_subs();
-    $self->tree( $parent, $size );
+    $self->_tree( $parent, $size );
     
     return $self;
 }
 
-sub tree {
+sub _tree {
     my ($self, $parent, $size) = @_;
     
     if( !$self->{tree} and $parent and $size ){
@@ -45,13 +45,13 @@ sub tree {
 sub GetTree {
     my ($self) = @_;
     
-    return $self->tree->GetTree;
+    return $self->_tree->GetTree;
 }
 
 sub GetSelectedPath {
     my ($self) = @_;
     
-    my $tree = $self->tree;
+    my $tree = $self->_tree;
     my $path = $tree->GetPlData( $tree->GetSelection );
     return $path;
 }
@@ -99,6 +99,23 @@ dialog and it handles drives under Windows.
   # in a subroutine
   print $tree->GetSelectedPath;
 
+=head1 METHODS
+
+=head2 GetSelectedPath
+
+  $tree->GetSelectedPath
+
+This method returns the path of the item that is selected.
+
+=head2 GetTree
+
+  $tree->GetTree
+
+This is just a convenience method that wraps the GetTree method
+of Wx::Perl::VirtualTree.
+
+=head2 new
+
 =head1 AUTHOR
 
 Renee Baecker, C<< <module at renee-baecker.de> >>
@@ -106,8 +123,8 @@ Renee Baecker, C<< <module at renee-baecker.de> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to
-C<bug-wx-perl-podeditor at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Wx::Perl::PodEditor>.
+C<bug-wx-perl-dirtree at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Wx::Perl::DirTree>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
@@ -115,7 +132,7 @@ your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Wx::Perl::PodEditor
+    perldoc Wx::Perl::DirTree
 
 You can also look for information at:
 
@@ -123,7 +140,7 @@ You can also look for information at:
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Wx-Perl-PodEditor>
+L<http://annocpan.org/dist/Wx-Perl-DirTree>
 
 =item * CPAN Ratings
 

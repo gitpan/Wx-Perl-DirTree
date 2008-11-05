@@ -1,5 +1,9 @@
 Revision history for Wx::Perl::DirTree
 
+0.03    03 Nov 2008
+        + move MyApp.pm to DirTreeTestApp.pm due to a permission conflict on PAUSE
+        - replace all occurences of "PodEditor" with "DirTree" as this was a copy'n'paste mistake
+
 0.02    03 Nov 2008
         + added example
 
