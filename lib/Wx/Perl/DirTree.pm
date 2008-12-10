@@ -8,22 +8,21 @@ use Wx qw(wxOK wxID_ABOUT wxID_EXIT wxICON_INFORMATION wxTOP wxVERTICAL wxNO_FUL
 use Wx::Event qw(EVT_MENU EVT_CLOSE EVT_SIZE EVT_UPDATE_UI EVT_KEY_DOWN);
 use Wx::Perl::VirtualTreeCtrl qw(EVT_POPULATE_TREE_ITEM);
 
-our $VERSION = 0.03;
-
+our $VERSION = 0.06;
 
 sub new {
-    my ($class,$parent,$size) = @_;
+    my ($class,$parent,$size,$args) = @_;
     
     my $self = bless {}, $class;
     
     _load_subs();
-    $self->_tree( $parent, $size );
+    $self->_tree( $parent, $size, $args );
     
     return $self;
 }
 
 sub _tree {
-    my ($self, $parent, $size) = @_;
+    my ($self, $parent, $size, $args) = @_;
     
     if( !$self->{tree} and $parent and $size ){
         $self->{treectrl} = Wx::TreeCtrl->new( 
@@ -36,7 +35,7 @@ sub _tree {
     
         EVT_POPULATE_TREE_ITEM( $parent, $self->{tree}, \&AddChildren );
         
-        add_root( $self->{tree} );
+        add_root( $self->{tree}, $args );
     }
     
     return $self->{tree};
@@ -115,6 +114,70 @@ This is just a convenience method that wraps the GetTree method
 of Wx::Perl::VirtualTree.
 
 =head2 new
+
+Creates a new object
+
+  my $tree  = Wx::Perl::DirTree->new( $panel, [100,100] );
+  
+  my $tree2  = Wx::Perl::DirTree->new( 
+      $panel, 
+      [100,100],
+      {
+          dir => $path_to_dir,
+      }
+  );
+  
+  my $tree2  = Wx::Perl::DirTree->new( 
+      $panel, 
+      [100,100],
+      {
+          dir     => $path_to_dir,
+          is_root => 1,
+      }
+  );
+
+Parameters:
+
+=over 4
+
+=item 1 $parent
+
+A parent widget.
+
+=item 2 $size
+
+The size of the tree widget. This has to be an array reference.
+
+=item 3 $hashref
+
+In this hash reference you can specifiy more parameters:
+
+=over 4
+
+=item * dir
+
+If you want to "open" a specific directory, you can specify "dir"
+
+=item * is_root
+
+If set to a true value, the dir tree starts at the specified directory. If you
+want to provide a directory tree that shows only the directories below the
+home directory of a user you can do this:
+
+  Wx::Perl::DirTree->new(
+    $panel,
+    $size,
+    {
+        dir => File::HomeDir->my_home,
+        is_root => 1,
+    }
+  );
+
+=back
+
+=back
+
+See also the scripts in the example dir.
 
 =head1 AUTHOR
 

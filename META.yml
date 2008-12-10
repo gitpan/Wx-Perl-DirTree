@@ -3,7 +3,10 @@ abstract: 'A directory tree widget for wxPerl'
 author:
   - 'Renee Baecker <module@renee-baecker.de>'
 build_requires:
-  Wx::Perl::VirtualTreeCtrl 1.17
+  Wx::Perl::VirtualTreeCtrl: 1.17
+  Exporter: 0
+  Cwd: 0
+  File::Basename: 0
 generated_by: 'h2xs version 1.23'
 license: perl
 meta-spec:
@@ -12,15 +15,14 @@ meta-spec:
 name: Wx-Perl-DirTree
 provides:
   Wx::Perl::DirTree:
-    file: /lib/Wx/Perl/DirTree.pm
-    version: 0.03
+    file: lib/Wx/Perl/DirTree.pm
+    version: 0.06
   Wx::Perl::DirTree::Linux:
-    file: /lib/Wx/Perl/DirTree/Linux.pm
+    file: lib/Wx/Perl/DirTree/Linux.pm
     version: 0.01
   Wx::Perl::DirTree::Win32:
-    file: /lib/Wx/Perl/DirTree/Win32.pm
-    version: 0.01
+    file: lib/Wx/Perl/DirTree/Win32.pm
+    version: 0.02
 resources:
   license: http://dev.perl.org/licenses
-version: 0.03
-
+version: 0.06

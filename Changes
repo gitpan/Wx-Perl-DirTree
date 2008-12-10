@@ -1,5 +1,19 @@
 Revision history for Wx::Perl::DirTree
 
+0.06    09 Dec 2008
+        - bugfix in META.yml
+        + add a new parameter: dir
+        + add a new parameter: is_root
+        + added new examples for new parameters
+        - bugfix in Linux.pm
+
+0.05    06 Nov 2008
+        + updated to MANIFEST
+        + add manifest.t
+
+0.04    05 Nov 2008
+        - fix package name in example/DirTreeTestApp.pm
+
 0.03    03 Nov 2008
         + move MyApp.pm to DirTreeTestApp.pm due to a permission conflict on PAUSE
         - replace all occurences of "PodEditor" with "DirTree" as this was a copy'n'paste mistake

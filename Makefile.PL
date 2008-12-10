@@ -11,6 +11,9 @@ WriteMakefile(
     PREREQ_PM => {
         'Test::More'                => 0,
         'Wx::Perl::VirtualTreeCtrl' => 1.017,
+        'Exporter'                  => 0,
+        'File::Spec'                => 0,
+        'Cwd'                       => 0,
         
         ( $^O =~ m!win32! ? 
             ( 'Win32::API'          => 0.46 ) :

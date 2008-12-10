@@ -3,10 +3,17 @@ MANIFEST
 META.yml
 Makefile.PL
 README
+.cvsignore
 
 example/dirtree.pl
 example/DirTreeTest.pm
 example/DirTreeTestApp.pm
+example/dirtree_dir.pl
+example/DirTreeTestDir.pm
+example/DirTreeTestAppDir.pm
+example/dirtree_root.pl
+example/DirTreeTestRoot.pm
+example/DirTreeTestAppRoot.pm
 
 lib/Wx/Perl/DirTree.pm
 lib/Wx/Perl/DirTree/Linux.pm
@@ -16,3 +23,4 @@ t/00-load.t
 t/boilerplate.t
 t/pod-coverage.t
 t/pod.t
+t/manifest.t

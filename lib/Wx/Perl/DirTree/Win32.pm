@@ -2,8 +2,9 @@ package Wx::Perl::DirTree::Win32;
 
 use strict;
 use warnings;
+use Cwd;
 use Exporter;
-#use File::Spec;
+use File::Spec;
 use Win32::API;
 
 our @ISA    = qw(Exporter);
@@ -12,15 +13,60 @@ our @EXPORT = qw(
     AddChildren
 );
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 sub add_root {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     
-    my $root = $self->AddRoot( 'Arbeitsplatz' );
-    $self->SetPlData( $root, '/' );
+    my $dir = [ '/', $ENV{COMPUTERNAME} || 'My Computer' ];
+    
+    if( exists $args->{dir} and -e $args->{dir} and 
+        exists $args->{is_root} and $args->{is_root} ){
+        my $path = Cwd::abs_path( $args->{dir} );
+        my @dirs = File::Spec->splitdir( $path );
+        $dir = [ $path, $dirs[-1] ];
+    }
+    
+    my $root = $self->AddRoot( $dir->[1] );
+    $self->SetPlData( $root, $dir->[0] );
     $self->SetItemHasChildren( $root, 1 );
     $self->Expand( $root );
+    
+    if( exists $args->{dir} and -e $args->{dir} and 
+        ( ( exists $args->{is_root} and not $args->{is_root} ) or
+            not exists $args->{is_root} )){
+            
+        my $path     = Cwd::abs_path( $args->{dir} );
+        my @dirs     = File::Spec->splitdir( $path );
+        my $tmp_item = _find_node( $self, $root, $dirs[0] );
+        $self->Expand( $tmp_item );
+        
+        for my $i ( 1 .. $#dirs ){
+            my $subdir = File::Spec->catdir( @dirs[0..$i] );
+            
+            my @data   = _get_content( $subdir );
+            _insert_items( $self, $tmp_item, @data );
+            
+            $tmp_item  = _find_node( $self, $tmp_item, $subdir );
+            $self->Expand( $tmp_item );
+        }
+    }
+}
+
+sub _find_node {
+    my ($tree,$parent,$value) = @_;
+    
+    $value = File::Spec->catdir( $value ) unless $value =~ m!\\$!;
+    
+    my ($id,$cookie) = $tree->GetFirstChild( $parent );
+    
+    while( $id->IsOk ){
+        if( $tree->GetPlData( $id ) eq $value ){
+            return $id;
+        }
+        
+        ($id,$cookie) = $tree->GetNextChild( $parent, $cookie );
+    }
 }
 
 sub AddChildren {
@@ -31,7 +77,7 @@ sub AddChildren {
     my $data = $tree->GetPlData( $item );
     
     if( $tree->GetChildrenCount( $item, 0 ) ){
-        warn $data;
+        #warn $data;
         
     }
     else{
@@ -44,12 +90,18 @@ sub AddChildren {
             @array = _get_content( $data );
         }
 
-        for my $child ( @array ){
-            my ($label,$value,$is_dir) = @$child;
-            my $childobj = $tree->AppendItem( $item, $label );
-            $tree->SetPlData( $childobj, $value );
-            $tree->SetItemHasChildren( $childobj, 1 ) if $is_dir;
-        }
+        _insert_items( $tree, $item, @array );
+    }
+}
+
+sub _insert_items {
+    my ( $tree, $item, @data ) = @_;
+
+    for my $child ( @data){
+        my ($label,$value,$is_dir) = @$child;
+        my $childobj = $tree->AppendItem( $item, $label );
+        $tree->SetPlData( $childobj, $value );
+        $tree->SetItemHasChildren( $childobj, 1 ) if $is_dir;
     }
 }
 
