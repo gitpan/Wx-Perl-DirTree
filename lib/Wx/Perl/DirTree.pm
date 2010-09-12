@@ -3,12 +3,32 @@ package Wx::Perl::DirTree;
 use strict;
 use warnings;
 
+use Exporter;
 
-use Wx qw(wxOK wxID_ABOUT wxID_EXIT wxICON_INFORMATION wxTOP wxVERTICAL wxNO_FULL_REPAINT_ON_RESIZE wxSYSTEM_MENU wxCAPTION wxMINIMIZE_BOX wxCLOSE_BOX wxDefaultPosition);
-use Wx::Event qw(EVT_MENU EVT_CLOSE EVT_SIZE EVT_UPDATE_UI EVT_KEY_DOWN);
+use Wx qw(
+    wxOK wxID_ABOUT wxID_EXIT wxICON_INFORMATION wxTOP wxVERTICAL 
+    wxNO_FULL_REPAINT_ON_RESIZE wxSYSTEM_MENU wxCAPTION wxMINIMIZE_BOX 
+    wxCLOSE_BOX wxDefaultPosition
+);
+
+use Wx::Event qw(
+    EVT_MENU EVT_CLOSE EVT_SIZE EVT_UPDATE_UI EVT_KEY_DOWN 
+    EVT_TREE_SEL_CHANGING EVT_TREE_SEL_CHANGED
+);
+
 use Wx::Perl::VirtualTreeCtrl qw(EVT_POPULATE_TREE_ITEM);
 
-our $VERSION = 0.06;
+our $VERSION = 0.07;
+
+our @ISA = qw(Exporter);
+
+our @EXPORT_OK   = qw(wxPDT_DIR wxPDT_FILE);
+our %EXPORT_TAGS = (
+    'const' => \@EXPORT_OK,
+);
+
+use constant wxPDT_DIR  => 2;
+use constant wxPDT_FILE => 4;
 
 sub new {
     my ($class,$parent,$size,$args) = @_;
@@ -29,16 +49,42 @@ sub _tree {
             $parent, -1, wxDefaultPosition, $size 
         );
         
-        $self->{tree}     = Wx::Perl::VirtualTreeCtrl->new( 
+        $self->{tree} = Wx::Perl::VirtualTreeCtrl->new( 
             $self->{treectrl}, -1, wxDefaultPosition, $size 
         );
     
         EVT_POPULATE_TREE_ITEM( $parent, $self->{tree}, \&AddChildren );
         
+        # if user wants to restrict the items allowed to be selected
+        # add another event handler
+        if ( exists $args->{allowed} ) {
+            EVT_TREE_SEL_CHANGING( $parent, $self->{tree}->GetTree, sub{
+                my ($self,$event) = @_;
+                CheckSelection( $event, $args->{allowed} );
+            } );
+        }
+        
         add_root( $self->{tree}, $args );
     }
     
     return $self->{tree};
+}
+
+sub CheckSelection {
+    my ($event,$allowed) = @_;
+    
+    my $tree = $event->GetEventObject;
+    my $item = $event->GetItem;
+    my $data = $tree->GetPlData( $item );
+    
+    return if $allowed & wxPDT_FILE && $allowed & wxPDT_DIR;
+    
+    if ( ( $allowed & wxPDT_FILE ) && -d $data ) {
+        $event->Veto;
+    }
+    if ( ( $allowed & wxPDT_DIR ) && -f $data ) {
+        $event->Veto;
+    }
 }
 
 sub GetTree {
@@ -71,7 +117,7 @@ sub _load_subs {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -79,11 +125,9 @@ __END__
 
 Wx::Perl::DirTree - A directory tree widget for wxPerl
 
-=head1 DESCRIPTION
+=head1 VERSION
 
-Many widgets that display directory trees are dialogs or can't handle drives on
-Windows. This module aims to fill the gap. It can be integrated in any frame or
-dialog and it handles drives under Windows.
+version 0.07
 
 =head1 SYNOPSIS
 
@@ -97,6 +141,12 @@ dialog and it handles drives under Windows.
   
   # in a subroutine
   print $tree->GetSelectedPath;
+
+=head1 DESCRIPTION
+
+Many widgets that display directory trees are dialogs or can't handle drives on
+Windows. This module aims to fill the gap. It can be integrated in any frame or
+dialog and it handles drives under Windows.
 
 =head1 METHODS
 
@@ -173,6 +223,22 @@ home directory of a user you can do this:
     }
   );
 
+=item * allowed
+
+With that option you can specify whether only directories or only files can
+be selected. If this option is ommitted, both types can be selected.
+
+  use Wx::Perl::DirTree qw(:const); # loads two constants
+  
+  my $tree = Wx::Perl::DirTree->new(
+    $panel,
+    $size,
+    {
+        dir => File::HomeDir->my_home,
+        allowed => wxPDT_DIR, # only directories can be selected
+    }
+  );
+
 =back
 
 =back
@@ -181,51 +247,20 @@ See also the scripts in the example dir.
 
 =head1 AUTHOR
 
-Renee Baecker, C<< <module at renee-baecker.de> >>
+Renee Baecker <module@renee-baecker.de>
 
-=head1 BUGS
+=head1 COPYRIGHT AND LICENSE
 
-Please report any bugs or feature requests to
-C<bug-wx-perl-dirtree at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Wx::Perl::DirTree>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
+This software is Copyright (c) 2010 by Renee Baecker.
 
-=head1 SUPPORT
+This is free software, licensed under:
 
-You can find documentation for this module with the perldoc command.
-
-    perldoc Wx::Perl::DirTree
-
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Wx-Perl-DirTree>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/dist/Wx-Perl-DirTree>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Wx-Perl-DirTree>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Wx-Perl-DirTree>
-
-=back
-
-=head1 ACKNOWLEDGEMENTS
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008 Renee Baecker, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+  The Artistic License 2.0
 
 =cut
+
+
+__END__
+
+# ABSTRACT: A directory tree widget for wxPerl
+

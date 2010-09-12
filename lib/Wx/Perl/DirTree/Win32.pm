@@ -139,3 +139,38 @@ sub _get_drives {
 }
 
 1;
+
+# ABSTRACT: module for the directory tree on Win32
+
+
+__END__
+=pod
+
+=head1 NAME
+
+Wx::Perl::DirTree::Win32 - module for the directory tree on Win32
+
+=head1 VERSION
+
+version 0.07
+
+=head1 METHODS
+
+=head2 add_root
+
+=head2 AddChildren
+
+=head1 AUTHOR
+
+Renee Baecker <module@renee-baecker.de>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2010 by Renee Baecker.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0
+
+=cut
+
